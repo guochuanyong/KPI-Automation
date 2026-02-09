@@ -1,0 +1,30 @@
+Sub ConvertLockedFormulas_AllSheets()
+    Dim ws As Worksheet
+    Dim rng As Range, c As Range
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
+    For Each ws In ThisWorkbook.Worksheets
+        
+        On Error Resume Next
+        Set rng = ws.UsedRange.SpecialCells(xlCellTypeFormulas)
+        On Error GoTo 0
+        
+        If Not rng Is Nothing Then
+            For Each c In rng.Cells
+                If c.Locked Then
+                    c.Value = c.Value
+                End If
+            Next c
+        End If
+        
+        Set rng = Nothing
+    Next ws
+    
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+
+    MsgBox "Conversion Complete"
+
+End Sub
